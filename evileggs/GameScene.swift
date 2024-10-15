@@ -26,6 +26,10 @@ class GameScene: SKScene {
         }
     }
     
+    lazy var trashButton: SKSpriteNode = {
+        return childNode(withName: "//trash_button") as! SKSpriteNode
+    }()
+    
     var turrets = [Turret]()
     
     var idleSlots = [Int: TurretSlot]()
@@ -209,6 +213,12 @@ class GameScene: SKScene {
         
         turrets.filter { $0.stateMachine.currentState is TurretIsBeingEdited }.forEach { turret in
             turret.position = pos
+            
+            if trashButton.contains(pos) {
+                trashButton.childNode(withName: "trash_icon")?.setScale(1.25)
+            } else {
+                trashButton.childNode(withName: "trash_icon")?.setScale(1.00)
+            }
         }
     }
     
@@ -262,8 +272,17 @@ class GameScene: SKScene {
                 }      
             }
             
-            if !placedInSlot {
+            if !placedInSlot && trashButton.contains(pos) {
+                for slot in allSlots where slot.turretNode == turret {
+                    slot.removeTurret()
+                }
                 
+                entities.removeAll(where: { $0 == turret })
+                turret.removeFromParent()
+                
+                trashButton.childNode(withName: "trash_icon")?.setScale(1.00)
+                
+            } else if !placedInSlot {
                 turret.position = previousSlot.position
             }
             

@@ -19,9 +19,9 @@ class Turret: SKSpriteNode {
     var projectileSpeed: TimeInterval = 10
     var projectileRate: TimeInterval = 1
     
-    let turretTexture = SKTexture(imageNamed: "turret_1")
+    let turretTexture = SKTexture(imageNamed: "turret_0")
     
-    let shield = SKSpriteNode(texture: SKTexture(imageNamed: "level_background"))
+    let shield = SKSpriteNode(imageNamed: "level_background")
     
     let levelLabel = SKLabelNode(fontNamed: "AlfaSlabOne-Regular")
     
@@ -31,9 +31,7 @@ class Turret: SKSpriteNode {
             projectileSpeed = 10 - Double(currentLevel) / 4
             projectileRate = 1 - Double(currentLevel) / 20
             
-            if currentLevel.isMultiple(of: 5) {
-                texture = SKTexture(imageNamed: "turret_\(currentLevel*10)")
-            }
+            texture = SKTexture(imageNamed: "turret_\(currentLevel - (currentLevel % 5))")
         }
     }
     
